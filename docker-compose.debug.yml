@@ -1,0 +1,25 @@
+# docker-compose -f docker-compose.debug.yml run --rm next-web-app
+version: "3.6"
+services:
+  hap:
+    image: node:11
+    container_name: next-web-app
+    build: .
+    command: node --inspect-brk=0.0.0.0:5858 Server.js
+    environment:
+      - NODE_ENV=docker
+      - SB_BRANCH=preview
+      - PORT=3000
+    ports:
+      - 3000:3000
+      - 5858:5858
+    working_dir: /usr/next-web-app
+    volumes:
+      - .:/usr/next-web-app:cached
+    depends_on:
+      - mongo
+  mongo:
+    container_name: next-web-app-mongo
+    image: mongo
+    ports:
+      - 27017:27017

@@ -1,0 +1,24 @@
+# docker-compose run --rm --service-ports next-web-app
+# docker-compose up
+version: "2"
+services:
+  hap:
+    image: node:11
+    container_name: next-web-app
+    build: .
+    command: sh -c "node server.js"
+    environment:
+      - NODE_ENV=docker
+      - PORT=3000
+    ports:
+      - 3000:3000
+    working_dir: /usr/next-web-app
+    volumes:
+      - .:/usr/next-web-app:cached
+    depends_on:
+      - mongo
+  mongo:
+    container_name: next-web-app-mongo
+    image: mongo
+    ports:
+      - 27017:27017
